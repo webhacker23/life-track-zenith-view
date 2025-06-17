@@ -142,6 +142,138 @@ export type Database = {
           },
         ]
       }
+      daily_life_data: {
+        Row: {
+          breakfast: string | null
+          created_at: string
+          creative_activity: string | null
+          daily_goal: string | null
+          date: string
+          day_highlight: string | null
+          dinner: string | null
+          exercise_minutes: number | null
+          expense_category: string | null
+          family_time_minutes: number | null
+          friends_interaction: string | null
+          fruits_servings: number | null
+          goal_achieved: boolean | null
+          gratitude_note: string | null
+          id: string
+          improvement_area: string | null
+          learning_new_skill: string | null
+          lunch: string | null
+          meditation_minutes: number | null
+          money_saved: number | null
+          money_spent: number | null
+          mood_rating: number | null
+          outdoor_time_minutes: number | null
+          phone_screen_time_minutes: number | null
+          posture_breaks: number | null
+          reading_minutes: number | null
+          skill_practice_minutes: number | null
+          skincare_routine: boolean | null
+          sleep_end: string | null
+          sleep_start: string | null
+          snacks: string | null
+          social_media_minutes: number | null
+          steps_count: number | null
+          study_hours: number | null
+          tomorrow_priority: string | null
+          updated_at: string
+          user_id: string
+          vegetables_servings: number | null
+          vitamins_taken: boolean | null
+          water_glasses: number | null
+          work_hours: number | null
+        }
+        Insert: {
+          breakfast?: string | null
+          created_at?: string
+          creative_activity?: string | null
+          daily_goal?: string | null
+          date: string
+          day_highlight?: string | null
+          dinner?: string | null
+          exercise_minutes?: number | null
+          expense_category?: string | null
+          family_time_minutes?: number | null
+          friends_interaction?: string | null
+          fruits_servings?: number | null
+          goal_achieved?: boolean | null
+          gratitude_note?: string | null
+          id?: string
+          improvement_area?: string | null
+          learning_new_skill?: string | null
+          lunch?: string | null
+          meditation_minutes?: number | null
+          money_saved?: number | null
+          money_spent?: number | null
+          mood_rating?: number | null
+          outdoor_time_minutes?: number | null
+          phone_screen_time_minutes?: number | null
+          posture_breaks?: number | null
+          reading_minutes?: number | null
+          skill_practice_minutes?: number | null
+          skincare_routine?: boolean | null
+          sleep_end?: string | null
+          sleep_start?: string | null
+          snacks?: string | null
+          social_media_minutes?: number | null
+          steps_count?: number | null
+          study_hours?: number | null
+          tomorrow_priority?: string | null
+          updated_at?: string
+          user_id: string
+          vegetables_servings?: number | null
+          vitamins_taken?: boolean | null
+          water_glasses?: number | null
+          work_hours?: number | null
+        }
+        Update: {
+          breakfast?: string | null
+          created_at?: string
+          creative_activity?: string | null
+          daily_goal?: string | null
+          date?: string
+          day_highlight?: string | null
+          dinner?: string | null
+          exercise_minutes?: number | null
+          expense_category?: string | null
+          family_time_minutes?: number | null
+          friends_interaction?: string | null
+          fruits_servings?: number | null
+          goal_achieved?: boolean | null
+          gratitude_note?: string | null
+          id?: string
+          improvement_area?: string | null
+          learning_new_skill?: string | null
+          lunch?: string | null
+          meditation_minutes?: number | null
+          money_saved?: number | null
+          money_spent?: number | null
+          mood_rating?: number | null
+          outdoor_time_minutes?: number | null
+          phone_screen_time_minutes?: number | null
+          posture_breaks?: number | null
+          reading_minutes?: number | null
+          skill_practice_minutes?: number | null
+          skincare_routine?: boolean | null
+          sleep_end?: string | null
+          sleep_start?: string | null
+          snacks?: string | null
+          social_media_minutes?: number | null
+          steps_count?: number | null
+          study_hours?: number | null
+          tomorrow_priority?: string | null
+          updated_at?: string
+          user_id?: string
+          vegetables_servings?: number | null
+          vitamins_taken?: boolean | null
+          water_glasses?: number | null
+          work_hours?: number | null
+        }
+        Relationships: []
+      }
       enrollments: {
         Row: {
           enrolled_at: string | null
