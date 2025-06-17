@@ -7,109 +7,127 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useDailyData } from '@/hooks/useDailyData';
+import { useToast } from '@/hooks/use-toast';
 
 const DailyTracker = () => {
-  const { saveData } = useDailyData();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
-    // Health & Wellness
-    sleep_start: '',
-    sleep_end: '',
-    water_glasses: 0,
-    exercise_minutes: 0,
-    meditation_minutes: 0,
-    steps_count: 0,
+    // Financial
+    moneySaved: '',
+    moneySpent: '',
     
-    // Food & Nutrition
-    breakfast: '',
-    lunch: '',
-    dinner: '',
-    snacks: '',
-    fruits_servings: 0,
-    vegetables_servings: 0,
+    // Health & Habits
+    cigarettesSmoked: '',
+    alcoholConsumed: '',
+    waterGlasses: '',
+    coffeeCups: '',
     
-    // Productivity & Learning
-    work_hours: 0,
-    study_hours: 0,
-    reading_minutes: 0,
-    skill_practice_minutes: 0,
+    // Sleep & Rest
+    sleepStart: '',
+    sleepEnd: '',
+    napTime: '',
+    
+    // Physical Activity
+    exerciseDone: '',
+    exerciseType: '',
+    exerciseDuration: '',
+    steps: '',
+    
+    // Diet & Nutrition
+    dietQuality: '',
+    mealsCooked: '',
+    junkFoodItems: '',
+    fruitsVeggies: '',
+    
+    // Personal Development
+    booksRead: '',
+    studyTime: '',
+    skillPractice: '',
     
     // Social & Emotional
-    family_time_minutes: 0,
-    friends_interaction: '',
-    mood_rating: 5,
-    gratitude_note: '',
+    socialTime: '',
+    moodRating: '',
+    stressLevel: '',
+    gratitude: '',
     
-    // Finance & Goals
-    money_saved: 0,
-    money_spent: 0,
-    expense_category: '',
-    daily_goal: '',
-    goal_achieved: false,
+    // Technology & Entertainment
+    screenTime: '',
+    socialMediaTime: '',
+    tvTime: '',
     
-    // Habits & Activities
-    phone_screen_time_minutes: 0,
-    social_media_minutes: 0,
-    outdoor_time_minutes: 0,
-    creative_activity: '',
-    learning_new_skill: '',
+    // Productivity & Work
+    workHours: '',
+    productiveHours: '',
+    goals: '',
     
-    // Self Care & Wellness
-    skincare_routine: false,
-    vitamins_taken: false,
-    posture_breaks: 0,
+    // Health Metrics
+    heightSteps: '',
+    weight: '',
     
-    // Reflection
-    day_highlight: '',
-    improvement_area: '',
-    tomorrow_priority: ''
+    // Daily Notes
+    notes: ''
   });
 
-  const handleInputChange = (field: string, value: string | number | boolean) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async () => {
-    await saveData(formData);
+  const handleSubmit = () => {
+    // Get existing data
+    const existingData = JSON.parse(localStorage.getItem('lifeTrackerData') || '[]');
+    
+    // Add new entry with current date
+    const newEntry = {
+      ...formData,
+      date: new Date().toISOString().split('T')[0],
+      timestamp: new Date().toISOString()
+    };
+    
+    existingData.push(newEntry);
+    localStorage.setItem('lifeTrackerData', JSON.stringify(existingData));
+    
+    console.log('Data saved to localStorage:', newEntry);
     
     // Reset form
     setFormData({
-      sleep_start: '',
-      sleep_end: '',
-      water_glasses: 0,
-      exercise_minutes: 0,
-      meditation_minutes: 0,
-      steps_count: 0,
-      breakfast: '',
-      lunch: '',
-      dinner: '',
-      snacks: '',
-      fruits_servings: 0,
-      vegetables_servings: 0,
-      work_hours: 0,
-      study_hours: 0,
-      reading_minutes: 0,
-      skill_practice_minutes: 0,
-      family_time_minutes: 0,
-      friends_interaction: '',
-      mood_rating: 5,
-      gratitude_note: '',
-      money_saved: 0,
-      money_spent: 0,
-      expense_category: '',
-      daily_goal: '',
-      goal_achieved: false,
-      phone_screen_time_minutes: 0,
-      social_media_minutes: 0,
-      outdoor_time_minutes: 0,
-      creative_activity: '',
-      learning_new_skill: '',
-      skincare_routine: false,
-      vitamins_taken: false,
-      posture_breaks: 0,
-      day_highlight: '',
-      improvement_area: '',
-      tomorrow_priority: ''
+      moneySaved: '',
+      moneySpent: '',
+      cigarettesSmoked: '',
+      alcoholConsumed: '',
+      waterGlasses: '',
+      coffeeCups: '',
+      sleepStart: '',
+      sleepEnd: '',
+      napTime: '',
+      exerciseDone: '',
+      exerciseType: '',
+      exerciseDuration: '',
+      steps: '',
+      dietQuality: '',
+      mealsCooked: '',
+      junkFoodItems: '',
+      fruitsVeggies: '',
+      booksRead: '',
+      studyTime: '',
+      skillPractice: '',
+      socialTime: '',
+      moodRating: '',
+      stressLevel: '',
+      gratitude: '',
+      screenTime: '',
+      socialMediaTime: '',
+      tvTime: '',
+      workHours: '',
+      productiveHours: '',
+      goals: '',
+      heightSteps: '',
+      weight: '',
+      notes: ''
+    });
+
+    toast({
+      title: "Entry Saved!",
+      description: "Your daily tracking data has been saved successfully.",
     });
   };
 
@@ -136,8 +154,8 @@ const DailyTracker = () => {
                 <Input
                   type="number"
                   placeholder="0"
-                  value={formData.money_saved}
-                  onChange={(e) => handleInputChange('money_saved', Number(e.target.value))}
+                  value={formData.moneySaved}
+                  onChange={(e) => handleInputChange('moneySaved', e.target.value)}
                   className="bg-white/50 border-gray-200 focus:border-blue-400"
                 />
               </div>
@@ -149,18 +167,48 @@ const DailyTracker = () => {
                 <Input
                   type="number"
                   placeholder="0"
-                  value={formData.money_spent}
-                  onChange={(e) => handleInputChange('money_spent', Number(e.target.value))}
+                  value={formData.moneySpent}
+                  onChange={(e) => handleInputChange('moneySpent', e.target.value)}
                   className="bg-white/50 border-gray-200 focus:border-blue-400"
                 />
               </div>
             </div>
           </div>
 
-          {/* Health & Wellness Section */}
+          {/* Health & Habits Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">🏥 Health & Wellness</h3>
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">🏥 Health & Habits</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="flex items-center space-x-2 text-gray-700 font-medium">
+                  <Cigarette className="w-4 h-4 text-red-500" />
+                  <span>Cigarettes Smoked</span>
+                </Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.cigarettesSmoked}
+                  onChange={(e) => handleInputChange('cigarettesSmoked', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="flex items-center space-x-2 text-gray-700 font-medium">
+                  <Wine className="w-4 h-4 text-purple-500" />
+                  <span>Alcohol Consumed</span>
+                </Label>
+                <Select value={formData.alcoholConsumed} onValueChange={(value) => handleInputChange('alcoholConsumed', value)}>
+                  <SelectTrigger className="bg-white/50 border-gray-200 focus:border-blue-400">
+                    <SelectValue placeholder="Select option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    <SelectItem value="light">Light (1-2 drinks)</SelectItem>
+                    <SelectItem value="moderate">Moderate (3-4 drinks)</SelectItem>
+                    <SelectItem value="heavy">Heavy (5+ drinks)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="space-y-2">
                 <Label className="flex items-center space-x-2 text-gray-700 font-medium">
                   <Droplets className="w-4 h-4 text-blue-500" />
@@ -169,31 +217,31 @@ const DailyTracker = () => {
                 <Input
                   type="number"
                   placeholder="0"
-                  value={formData.water_glasses}
-                  onChange={(e) => handleInputChange('water_glasses', Number(e.target.value))}
+                  value={formData.waterGlasses}
+                  onChange={(e) => handleInputChange('waterGlasses', e.target.value)}
                   className="bg-white/50 border-gray-200 focus:border-blue-400"
                 />
               </div>
               <div className="space-y-2">
                 <Label className="flex items-center space-x-2 text-gray-700 font-medium">
-                  <Dumbbell className="w-4 h-4 text-orange-500" />
-                  <span>Exercise Minutes</span>
+                  <Coffee className="w-4 h-4 text-amber-600" />
+                  <span>Coffee/Tea Cups</span>
                 </Label>
                 <Input
                   type="number"
                   placeholder="0"
-                  value={formData.exercise_minutes}
-                  onChange={(e) => handleInputChange('exercise_minutes', Number(e.target.value))}
+                  value={formData.coffeeCups}
+                  onChange={(e) => handleInputChange('coffeeCups', e.target.value)}
                   className="bg-white/50 border-gray-200 focus:border-blue-400"
                 />
               </div>
             </div>
           </div>
 
-          {/* Sleep Section */}
+          {/* Sleep & Rest Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">😴 Sleep</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">😴 Sleep & Rest</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label className="flex items-center space-x-2 text-gray-700 font-medium">
                   <Clock className="w-4 h-4 text-blue-500" />
@@ -201,8 +249,8 @@ const DailyTracker = () => {
                 </Label>
                 <Input
                   type="time"
-                  value={formData.sleep_start}
-                  onChange={(e) => handleInputChange('sleep_start', e.target.value)}
+                  value={formData.sleepStart}
+                  onChange={(e) => handleInputChange('sleepStart', e.target.value)}
                   className="bg-white/50 border-gray-200 focus:border-blue-400"
                 />
               </div>
@@ -213,15 +261,135 @@ const DailyTracker = () => {
                 </Label>
                 <Input
                   type="time"
-                  value={formData.sleep_end}
-                  onChange={(e) => handleInputChange('sleep_end', e.target.value)}
+                  value={formData.sleepEnd}
+                  onChange={(e) => handleInputChange('sleepEnd', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="flex items-center space-x-2 text-gray-700 font-medium">
+                  <Clock className="w-4 h-4 text-purple-500" />
+                  <span>Nap Time (minutes)</span>
+                </Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.napTime}
+                  onChange={(e) => handleInputChange('napTime', e.target.value)}
                   className="bg-white/50 border-gray-200 focus:border-blue-400"
                 />
               </div>
             </div>
           </div>
 
-          {/* Mood & Mental Health */}
+          {/* Physical Activity Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">💪 Physical Activity</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="flex items-center space-x-2 text-gray-700 font-medium">
+                  <Dumbbell className="w-4 h-4 text-orange-500" />
+                  <span>Exercise Done</span>
+                </Label>
+                <Select value={formData.exerciseDone} onValueChange={(value) => handleInputChange('exerciseDone', value)}>
+                  <SelectTrigger className="bg-white/50 border-gray-200 focus:border-blue-400">
+                    <SelectValue placeholder="Select option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No Exercise</SelectItem>
+                    <SelectItem value="light">Light Exercise</SelectItem>
+                    <SelectItem value="moderate">Moderate Exercise</SelectItem>
+                    <SelectItem value="intense">Intense Exercise</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Exercise Type</Label>
+                <Input
+                  placeholder="e.g., Running, Gym, Yoga"
+                  value={formData.exerciseType}
+                  onChange={(e) => handleInputChange('exerciseType', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Exercise Duration (minutes)</Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.exerciseDuration}
+                  onChange={(e) => handleInputChange('exerciseDuration', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Steps Walked</Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.steps}
+                  onChange={(e) => handleInputChange('steps', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Diet & Nutrition Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">🍎 Diet & Nutrition</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="flex items-center space-x-2 text-gray-700 font-medium">
+                  <Apple className="w-4 h-4 text-green-500" />
+                  <span>Diet Quality</span>
+                </Label>
+                <Select value={formData.dietQuality} onValueChange={(value) => handleInputChange('dietQuality', value)}>
+                  <SelectTrigger className="bg-white/50 border-gray-200 focus:border-blue-400">
+                    <SelectValue placeholder="Rate your diet" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="poor">Poor</SelectItem>
+                    <SelectItem value="fair">Fair</SelectItem>
+                    <SelectItem value="good">Good</SelectItem>
+                    <SelectItem value="excellent">Excellent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Home Cooked Meals</Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.mealsCooked}
+                  onChange={(e) => handleInputChange('mealsCooked', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Junk Food Items</Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.junkFoodItems}
+                  onChange={(e) => handleInputChange('junkFoodItems', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Fruits & Vegetables Servings</Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.fruitsVeggies}
+                  onChange={(e) => handleInputChange('fruitsVeggies', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Mental Health & Mood Section */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">🧠 Mental Health & Mood</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -230,7 +398,7 @@ const DailyTracker = () => {
                   <Smile className="w-4 h-4 text-yellow-500" />
                   <span>Mood Rating (1-10)</span>
                 </Label>
-                <Select value={formData.mood_rating.toString()} onValueChange={(value) => handleInputChange('mood_rating', Number(value))}>
+                <Select value={formData.moodRating} onValueChange={(value) => handleInputChange('moodRating', value)}>
                   <SelectTrigger className="bg-white/50 border-gray-200 focus:border-blue-400">
                     <SelectValue placeholder="Rate your mood" />
                   </SelectTrigger>
@@ -242,25 +410,124 @@ const DailyTracker = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-700 font-medium">Steps Count</Label>
+                <Label className="flex items-center space-x-2 text-gray-700 font-medium">
+                  <Heart className="w-4 h-4 text-red-500" />
+                  <span>Stress Level (1-10)</span>
+                </Label>
+                <Select value={formData.stressLevel} onValueChange={(value) => handleInputChange('stressLevel', value)}>
+                  <SelectTrigger className="bg-white/50 border-gray-200 focus:border-blue-400">
+                    <SelectValue placeholder="Rate your stress" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[1,2,3,4,5,6,7,8,9,10].map(num => (
+                      <SelectItem key={num} value={num.toString()}>{num} {num <= 3 ? '😌' : num <= 6 ? '😬' : '😰'}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          {/* Technology & Screen Time Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">📱 Technology & Screen Time</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="flex items-center space-x-2 text-gray-700 font-medium">
+                  <Smartphone className="w-4 h-4 text-gray-500" />
+                  <span>Screen Time Before Sleep</span>
+                </Label>
+                <Select value={formData.screenTime} onValueChange={(value) => handleInputChange('screenTime', value)}>
+                  <SelectTrigger className="bg-white/50 border-gray-200 focus:border-blue-400">
+                    <SelectValue placeholder="Select option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No Screen Time</SelectItem>
+                    <SelectItem value="light">Less than 30 mins</SelectItem>
+                    <SelectItem value="moderate">30 mins - 1 hour</SelectItem>
+                    <SelectItem value="heavy">More than 1 hour</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Social Media Time (hours)</Label>
                 <Input
                   type="number"
+                  step="0.5"
                   placeholder="0"
-                  value={formData.steps_count}
-                  onChange={(e) => handleInputChange('steps_count', Number(e.target.value))}
+                  value={formData.socialMediaTime}
+                  onChange={(e) => handleInputChange('socialMediaTime', e.target.value)}
                   className="bg-white/50 border-gray-200 focus:border-blue-400"
                 />
               </div>
             </div>
           </div>
 
-          {/* Daily Reflection */}
+          {/* Personal Development Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">📚 Personal Development</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="flex items-center space-x-2 text-gray-700 font-medium">
+                  <Book className="w-4 h-4 text-blue-500" />
+                  <span>Reading Time (minutes)</span>
+                </Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.booksRead}
+                  onChange={(e) => handleInputChange('booksRead', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Study Time (minutes)</Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.studyTime}
+                  onChange={(e) => handleInputChange('studyTime', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Health Metrics */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">📏 Health Metrics</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Height Improvement Steps Taken</Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={formData.heightSteps}
+                  onChange={(e) => handleInputChange('heightSteps', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium">Weight (kg)</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  placeholder="0"
+                  value={formData.weight}
+                  onChange={(e) => handleInputChange('weight', e.target.value)}
+                  className="bg-white/50 border-gray-200 focus:border-blue-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Daily Notes */}
           <div className="space-y-2">
-            <Label className="text-gray-700 font-medium">Daily Highlight & Gratitude</Label>
+            <Label className="text-gray-700 font-medium">Daily Notes & Gratitude</Label>
             <Textarea
-              placeholder="What was the best part of your day? What are you grateful for?"
-              value={formData.day_highlight}
-              onChange={(e) => handleInputChange('day_highlight', e.target.value)}
+              placeholder="Write about your day, achievements, gratitude, or any observations..."
+              value={formData.notes}
+              onChange={(e) => handleInputChange('notes', e.target.value)}
               className="bg-white/50 border-gray-200 focus:border-blue-400 min-h-[100px]"
             />
           </div>

@@ -1,10 +1,8 @@
 
 import { useState } from 'react';
-import { Calendar, TrendingUp, Target, Plus, Database, LogOut, User } from 'lucide-react';
+import { Calendar, TrendingUp, Target, Plus, Database } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/AuthContext';
-import AuthPage from '@/components/AuthPage';
 import DailyTracker from '@/components/DailyTracker';
 import SummaryDashboard from '@/components/SummaryDashboard';
 import TrendsChart from '@/components/TrendsChart';
@@ -12,24 +10,6 @@ import DataViewer from '@/components/DataViewer';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const { user, loading, signOut } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <Target className="w-6 h-6 text-white" />
-          </div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <AuthPage />;
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -43,27 +23,16 @@ const Index = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Life Tracker</h1>
-                <p className="text-sm text-gray-500">Welcome, {user.user_metadata?.full_name || user.email}</p>
+                <p className="text-sm text-gray-500">Track your daily progress</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                onClick={() => setActiveTab('tracker')}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Entry
-              </Button>
-              <Button
-                onClick={signOut}
-                variant="outline"
-                size="sm"
-                className="flex items-center space-x-2"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
-              </Button>
-            </div>
+            <Button
+              onClick={() => setActiveTab('tracker')}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Entry
+            </Button>
           </div>
         </div>
       </header>
