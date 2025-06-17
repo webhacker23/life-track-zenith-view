@@ -1,11 +1,12 @@
 
 import { useState } from 'react';
-import { Calendar, TrendingUp, Target, Plus } from 'lucide-react';
+import { Calendar, TrendingUp, Target, Plus, Database } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import DailyTracker from '@/components/DailyTracker';
 import SummaryDashboard from '@/components/SummaryDashboard';
 import TrendsChart from '@/components/TrendsChart';
+import DataViewer from '@/components/DataViewer';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -72,6 +73,17 @@ const Index = () => {
             <TrendingUp className="w-4 h-4" />
             <span>Trends</span>
           </button>
+          <button
+            onClick={() => setActiveTab('data')}
+            className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg font-medium transition-all ${
+              activeTab === 'data'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Database className="w-4 h-4" />
+            <span>Data</span>
+          </button>
         </div>
       </div>
 
@@ -80,6 +92,7 @@ const Index = () => {
         {activeTab === 'dashboard' && <SummaryDashboard />}
         {activeTab === 'tracker' && <DailyTracker />}
         {activeTab === 'trends' && <TrendsChart />}
+        {activeTab === 'data' && <DataViewer />}
       </main>
     </div>
   );
