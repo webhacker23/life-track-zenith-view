@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { DollarSign, Cigarette, Wine, Clock, Dumbbell, Apple, TrendingUp, TrendingDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -151,19 +150,19 @@ const SummaryDashboard = () => {
       <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Monthly Summary
+            🇮🇳 Monthly Summary Dashboard
           </CardTitle>
           <p className="text-gray-600">
-            {monthlyStats.entriesCount} entries this month
+            {monthlyStats.entriesCount} entries this month • All amounts in Indian Rupees (₹)
           </p>
         </CardHeader>
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <StatCard
-          title="Money Saved"
+          title="Money Saved (₹)"
           value={monthlyStats.current.totalMoneySaved.toFixed(2)}
-          unit="$"
+          unit=""
           current={monthlyStats.current.totalMoneySaved}
           last={monthlyStats.last.totalMoneySaved}
           icon={<DollarSign className="w-6 h-6 text-green-600" />}

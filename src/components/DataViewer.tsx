@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Eye, Download, Trash2, Calendar } from 'lucide-react';
+import { Eye, Trash2, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -8,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 const DataViewer = () => {
   const { toast } = useToast();
   const [data, setData] = useState<any[]>([]);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -18,22 +17,6 @@ const DataViewer = () => {
     const storedData = JSON.parse(localStorage.getItem('lifeTrackerData') || '[]');
     setData(storedData);
     console.log('Loaded data from localStorage:', storedData);
-  };
-
-  const exportData = () => {
-    const dataStr = JSON.stringify(data, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'life-tracker-data.json';
-    link.click();
-    URL.revokeObjectURL(url);
-
-    toast({
-      title: "Data Exported!",
-      description: "Your tracking data has been downloaded as a JSON file.",
-    });
   };
 
   const clearAllData = () => {
@@ -47,12 +30,24 @@ const DataViewer = () => {
     }
   };
 
+  const formatFieldName = (key: string) => {
+    return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+  };
+
+  const formatValue = (key: string, value: string) => {
+    if (key === 'moneySaved') return `₹${value}`;
+    if (key === 'date') return new Date(value).toLocaleDateString('en-IN');
+    if (key === 'sleepStart' || key === 'sleepEnd') return value;
+    if (value === 'yes' || value === 'no') return value.charAt(0).toUpperCase() + value.slice(1);
+    return value;
+  };
+
   return (
     <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
       <CardHeader>
         <CardTitle className="text-xl font-bold text-gray-800 flex items-center space-x-2">
           <Eye className="w-5 h-5" />
-          <span>Data Management</span>
+          <span>Your Daily Life Data</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -60,77 +55,75 @@ const DataViewer = () => {
           <div>
             <p className="text-gray-700 font-medium">Total Entries: {data.length}</p>
             <p className="text-sm text-gray-500">
-              Data is automatically saved to your browser's local storage
+              All your daily tracking data stored locally
             </p>
           </div>
-          <Button
-            onClick={() => setIsVisible(!isVisible)}
-            variant="outline"
-            size="sm"
-          >
-            {isVisible ? 'Hide' : 'Show'} Data
-          </Button>
-        </div>
-
-        <div className="flex space-x-2">
-          <Button
-            onClick={exportData}
-            className="flex items-center space-x-2"
-            disabled={data.length === 0}
-          >
-            <Download className="w-4 h-4" />
-            <span>Export Data</span>
-          </Button>
-          <Button
-            onClick={clearAllData}
-            variant="destructive"
-            className="flex items-center space-x-2"
-            disabled={data.length === 0}
-          >
-            <Trash2 className="w-4 h-4" />
-            <span>Clear All</span>
-          </Button>
-          <Button
-            onClick={loadData}
-            variant="outline"
-            className="flex items-center space-x-2"
-          >
-            <Calendar className="w-4 h-4" />
-            <span>Refresh</span>
-          </Button>
-        </div>
-
-        {isVisible && (
-          <div className="mt-4 max-h-96 overflow-y-auto bg-gray-50 rounded-lg p-4">
-            <h4 className="font-semibold mb-2">Stored Data:</h4>
-            {data.length === 0 ? (
-              <p className="text-gray-500">No data saved yet. Start tracking to see your data here!</p>
-            ) : (
-              <div className="space-y-2">
-                {data.map((entry, index) => (
-                  <div key={index} className="bg-white p-3 rounded border">
-                    <div className="font-medium text-sm text-blue-600">
-                      Entry #{index + 1} - {new Date(entry.date).toLocaleDateString()}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {Object.keys(entry).length} fields tracked
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+          <div className="flex space-x-2">
+            <Button
+              onClick={loadData}
+              variant="outline"
+              className="flex items-center space-x-2"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Refresh</span>
+            </Button>
+            <Button
+              onClick={clearAllData}
+              variant="destructive"
+              className="flex items-center space-x-2"
+              disabled={data.length === 0}
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Clear All</span>
+            </Button>
           </div>
-        )}
+        </div>
+
+        <div className="max-h-96 overflow-y-auto bg-gray-50 rounded-lg p-4">
+          <h4 className="font-semibold mb-4 text-gray-800">Daily Life Tracking Records:</h4>
+          {data.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No data tracked yet. Start adding your daily entries!</p>
+          ) : (
+            <div className="space-y-4">
+              {data.map((entry, index) => (
+                <div key={index} className="bg-white p-4 rounded-lg border shadow-sm">
+                  <div className="font-semibold text-blue-600 mb-3 text-lg">
+                    📅 {new Date(entry.date).toLocaleDateString('en-IN', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {Object.entries(entry).map(([key, value]) => {
+                      if (key === 'date') return null;
+                      return (
+                        <div key={key} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                          <span className="text-sm font-medium text-gray-600">
+                            {formatFieldName(key)}:
+                          </span>
+                          <span className="text-sm text-gray-800 font-semibold">
+                            {formatValue(key, value as string)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-          <h4 className="font-semibold text-blue-800 mb-2">How Your Data is Saved & Tracked:</h4>
+          <h4 className="font-semibold text-blue-800 mb-2">📊 How Your Data Works:</h4>
           <ul className="text-sm text-blue-700 space-y-1">
-            <li>• Data is saved locally in your browser (localStorage)</li>
-            <li>• Each daily entry is timestamped and stored permanently</li>
-            <li>• You can export your data as a JSON file for backup</li>
+            <li>• Every daily entry is automatically saved to your device</li>
             <li>• Data persists between browser sessions</li>
-            <li>• Dashboard and trends automatically calculate from your saved data</li>
-            <li>• Clear browser data will remove all tracked information</li>
+            <li>• Dashboard calculates monthly progress from this data</li>
+            <li>• Trends show your improvement over time</li>
+            <li>• All data stays private on your device</li>
           </ul>
         </div>
       </CardContent>
